@@ -103,20 +103,20 @@ def get_vector_store(embedding_model: Embeddings = get_embedding_model(), path: 
 
 if __name__ == "__main__":
     # when run as a script, run some tests to demonstrate capabilities
-#    pdfs = (
-#        { "url": "https://quanticedu.github.io/PraxaNew/Longest Running Shows on Broadway 2025.pdf",
-#          "filename": "Longest Running Shows on Broadway.pdf" },
-#        { "url": "https://quanticedu.github.io/PraxaNew/Every play and musical coming to the West End in 2025.pdf",
-#          "filename": "Every play and musical coming to the West End in 2025.pdf" }
-#    )
-#    download_context_data(pdfs)
-#    context_data = load_context_data()
+    pdfs = (
+        { "url": "https://quanticedu.github.io/PraxaNew/Longest Running Shows on Broadway 2025.pdf",
+          "filename": "Longest Running Shows on Broadway.pdf" },
+        { "url": "https://quanticedu.github.io/PraxaNew/Every play and musical coming to the West End in 2025.pdf",
+          "filename": "Every play and musical coming to the West End in 2025.pdf" }
+    )
+    download_context_data(pdfs)
+    context_data = load_context_data()
 #    chunks = chunk_context_data(context_data)
 #    embedding_model = get_embedding_model()
 #    vector_store = create_vector_store(chunks, embedding_model)
 
-#    for page in context_data:
-#        print(page)
+    for page in context_data:
+        print(page)
 
 #    for num, chunk in enumerate(chunks):
 #        print("-----")
