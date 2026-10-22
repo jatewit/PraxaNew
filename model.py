@@ -1,8 +1,12 @@
+from dotenv import load_dotenv
 from langchain_community.chat_models import ChatOpenAI
+from pathlib import Path
 from typing import Optional, Any
 import os
 
-os.environ["OPENROUTER_API_KEY"] = "<your key here>"
+# Read OPENROUTER_API_KEY from the .env file next to this file (.env is gitignored).
+# A key already exported in your shell wins: load_dotenv() never overrides it.
+load_dotenv(Path(__file__).with_name(".env"))
 
 class ChatModel(ChatOpenAI):
     """
@@ -15,6 +19,13 @@ class ChatModel(ChatOpenAI):
             openai_api_base: str="https://openrouter.ai/api/v1",
             **kwargs: Any):
         openai_api_key = openai_api_key or os.getenv('OPENROUTER_API_KEY')
+        if not openai_api_key:
+            # Fail here: otherwise ChatOpenAI silently falls back to OPENAI_API_KEY
+            # and would send that key to openrouter.ai.
+            raise ValueError(
+                "OPENROUTER_API_KEY is not set. Add OPENROUTER_API_KEY=<your key> to the "
+                ".env file next to model.py, or export it in your shell."
+            )
         super().__init__(
             openai_api_base=openai_api_base,
             openai_api_key=openai_api_key,

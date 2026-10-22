@@ -6,7 +6,7 @@ from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
-from typing import Iterable
+from typing import Iterable, Optional
 
 def download_context_data(pdfs: Iterable[dict[str, str]], path: str = "./context_data") -> None:
     """
@@ -66,36 +66,40 @@ def get_embedding_model(model_name: str = "sentence-transformers/all-MiniLM-L6-v
     """
     return HuggingFaceEmbeddings(model_name=model_name)
 
-def create_vector_store(chunks: list[Document], embedding_model: Embeddings = get_embedding_model(), path: str = "./chromadb") -> Chroma:
+def create_vector_store(chunks: list[Document], embedding_model: Optional[Embeddings] = None, path: str = "./chromadb") -> Chroma:
     """
     Create a persistent vector store from a list of chunked documents.
     
     :param chunks: The context data. If not specified, create an empty vector store.
     :type chunks: list[Document]
-    :param embedding_model: The embedding model to use (default is the default for get_embedding_model)
-    :type embedding_model: Embeddings
+    :param embedding_model: The embedding model to use (default: get_embedding_model(), loaded when this function is called)
+    :type embedding_model: Optional[Embeddings]
     :param path: Path to the vector store
     :type path: str
     :return: The vector store
     :rtype: Chroma
     """
+    if embedding_model is None:
+        embedding_model = get_embedding_model()  # loaded on call, not when context.py is imported
     return Chroma.from_documents(
         documents=chunks,
         embedding=embedding_model,
         persist_directory=path
     )
     
-def get_vector_store(embedding_model: Embeddings = get_embedding_model(), path: str = "./chromadb") -> Chroma:
+def get_vector_store(embedding_model: Optional[Embeddings] = None, path: str = "./chromadb") -> Chroma:
     """
     Gets a persistent vector store.
     
-    :param embedding_model: The embedding model to use (defaul is to use the default for get_embedding_model)
-    :type embedding_model: Embeddings
+    :param embedding_model: The embedding model to use (default: get_embedding_model(), loaded when this function is called)
+    :type embedding_model: Optional[Embeddings]
     :param path: path to the vector store
     :type path: str
     :return: The vector store
     :rtype: Chroma
     """
+    if embedding_model is None:
+        embedding_model = get_embedding_model()  # loaded on call, not when context.py is imported
     return Chroma(
         persist_directory=path,
         embedding_function=embedding_model

@@ -8,3 +8,4 @@ langchain-huggingface==0.2.0
 openai==1.82.0
 streamlit==1.45.1
 gdown==5.2.1
+python-dotenv==1.2.4
